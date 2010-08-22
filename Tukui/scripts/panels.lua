@@ -12,7 +12,7 @@ TukuiDB.CreatePanel(barbg, 1, 1, "BOTTOM", UIParent, "BOTTOM", 0, TukuiDB.Scale(
 if TukuiDB.lowversion == true then
 	barbg:SetWidth((TukuiDB.buttonsize * 12) + (TukuiDB.buttonspacing * 13))
 	if TukuiCF["actionbar"].bottomrows == 2 then
-		barbg:SetHeight((TukuiDB.buttonsize * 2) + (TukuiDB.buttonspacing * 3))
+		barbg:SetHeight((TukuiDB.buttonsize * 3) + (TukuiDB.buttonspacing * 4))
 	else
 		barbg:SetHeight(TukuiDB.buttonsize + (TukuiDB.buttonspacing * 2))
 	end

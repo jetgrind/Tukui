@@ -180,7 +180,16 @@ if TukuiDB.lowversion == true then
 			local b2 = _G["MultiBarBottomLeftButton"..i-1]
 			b:ClearAllPoints()
 			b:SetPoint("LEFT", b2, "RIGHT", TukuiDB.buttonspacing, 0)
-		end   
+		end
+		TukuiBar5:Show()
+  	MultiBarLeftButton1:ClearAllPoints()
+  	MultiBarLeftButton1:SetPoint("BOTTOM", MultiBarBottomLeftButton1, "TOP", 0, TukuiDB.Scale(4))
+  	for i= 2, 12 do
+  		local b = _G["MultiBarLeftButton"..i]
+  		local b2 = _G["MultiBarLeftButton"..i-1]
+  		b:ClearAllPoints()
+  		b:SetPoint("LEFT", b2, "RIGHT", TukuiDB.buttonspacing, 0)
+  	end
 	end
 else
 	TukuiBar2:Show()
