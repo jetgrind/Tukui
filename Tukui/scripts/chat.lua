@@ -448,9 +448,9 @@ local function Copy(cf)
 	local text = table.concat(lines, "\n", 1, lineCt)
 	FCF_SetChatWindowFontSize(cf, cf, size)
 	if not isf then CreatCopyFrame() end
+	if frame:IsShown() then frame:Hide() return end
 	frame:Show()
 	editBox:SetText(text)
-	editBox:HighlightText(0)
 end
 
 function TukuiDB.ChatCopyButtons()
@@ -462,7 +462,21 @@ function TukuiDB.ChatCopyButtons()
 		button:SetWidth(TukuiDB.Scale(20))
 		button:SetAlpha(0)
 		TukuiDB.SetTemplate(button)
-		button:SetScript("OnClick", function() Copy(cf) end)
+		
+		local buttontext = button:CreateFontString(nil,"OVERLAY",nil)
+		buttontext:SetFont(TukuiCF.media.font,12,"OUTLINE")
+		buttontext:SetText("C")
+		buttontext:SetPoint("CENTER")
+		buttontext:SetJustifyH("CENTER")
+		buttontext:SetJustifyV("CENTER")
+				
+		button:SetScript("OnMouseUp", function(self, btn)
+			if i == 1 and btn == "RightButton" then
+				ToggleFrame(ChatMenu)
+			else
+				Copy(cf)
+			end
+		end)
 		button:SetScript("OnEnter", function() 
 			button:SetAlpha(1) 
 		end)
