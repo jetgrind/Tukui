@@ -40,10 +40,6 @@ local function Shared(self, unit)
 	-- this is the glow border
 	TukuiDB.CreateShadow(self)
 	
-	-- rescale backdrop shadow for these class if plugin are loaded
-	if ((unit == "player") and (TukuiDB.myclass == "SHAMAN" and TukuiCF.unitframes.totemtimer) or (TukuiDB.myclass == "DEATHKNIGHT" and TukuiCF.unitframes.runebar)) then
-		self.shadow:SetPoint("TOPLEFT", TukuiDB.Scale(-4), TukuiDB.Scale(13))
-	end
 	------------------------------------------------------------------------
 	--	Player and Target units layout (mostly mirror'd)
 	------------------------------------------------------------------------
@@ -303,6 +299,9 @@ local function Shared(self, unit)
 
 			-- deathknight runes
 			if TukuiDB.myclass == "DEATHKNIGHT" and db.runebar == true then
+				-- rescale top shadow border
+				self.shadow:SetPoint("TOPLEFT", TukuiDB.Scale(-4), TukuiDB.Scale(13))
+				
 				local Runes = CreateFrame("Frame", nil, self)
 				Runes:SetPoint("BOTTOMLEFT", self, "TOPLEFT", 0, TukuiDB.Scale(1))
 				Runes:SetHeight(TukuiDB.Scale(8))
@@ -336,6 +335,9 @@ local function Shared(self, unit)
 			
 			-- shaman totem bar
 			if TukuiDB.myclass == "SHAMAN" and db.totemtimer == true then
+				-- rescale top shadow border
+				self.shadow:SetPoint("TOPLEFT", TukuiDB.Scale(-4), TukuiDB.Scale(13))
+				
 				local TotemBar = {}
 				TotemBar.Destroy = true
 				for i = 1, 4 do
@@ -496,6 +498,7 @@ local function Shared(self, unit)
 				castbar.button:SetHeight(TukuiDB.Scale(26))
 				castbar.button:SetWidth(TukuiDB.Scale(26))
 				TukuiDB.SetTemplate(castbar.button)
+				TukuiDB.CreateShadow(castbar.button)
 
 				castbar.icon = castbar.button:CreateTexture(nil, "ARTWORK")
 				castbar.icon:SetPoint("TOPLEFT", castbar.button, TukuiDB.Scale(2), TukuiDB.Scale(-2))
@@ -514,7 +517,7 @@ local function Shared(self, unit)
 					else
 						castbar.button:SetPoint("RIGHT", 46.5, 26.5)
 					end					
-				end	
+				end
 			end
 			
 			-- cast bar latency on player
@@ -524,8 +527,6 @@ local function Shared(self, unit)
 				castbar.safezone:SetVertexColor(0.69, 0.31, 0.31, 0.75)
 				castbar.SafeZone = castbar.safezone
 			end
-			
-			TukuiDB.CreateShadow(castbar.button)
 					
 			self.Castbar = castbar
 			self.Castbar.Time = castbar.time
@@ -683,7 +684,7 @@ local function Shared(self, unit)
 		
 		-- health bar
 		local health = CreateFrame('StatusBar', nil, self)
-		health:SetHeight(TukuiDB.Scale(18))
+		health:SetHeight(TukuiDB.Scale(13))
 		health:SetPoint("TOPLEFT")
 		health:SetPoint("TOPRIGHT")
 		health:SetStatusBarTexture(normTex)
@@ -713,11 +714,32 @@ local function Shared(self, unit)
 				health.colorHappiness = true
 			end
 		end
+		
+		-- power
+		local power = CreateFrame('StatusBar', nil, self)
+		power:SetHeight(TukuiDB.Scale(4))
+		power:SetPoint("TOPLEFT", health, "BOTTOMLEFT", 0, -TukuiDB.mult)
+		power:SetPoint("TOPRIGHT", health, "BOTTOMRIGHT", 0, -TukuiDB.mult)
+		power:SetStatusBarTexture(normTex)
+		
+		power.frequentUpdates = true
+		power.colorPower = true
+		if db.showsmooth == true then
+			power.Smooth = true
+		end
+
+		local powerBG = power:CreateTexture(nil, 'BORDER')
+		powerBG:SetAllPoints(power)
+		powerBG:SetTexture(normTex)
+		powerBG.multiplier = 0.3
+				
+		self.Power = power
+		self.Power.bg = powerBG
 				
 		-- Unit name
 		local Name = health:CreateFontString(nil, "OVERLAY")
 		if TukuiDB.lowversion then
-			Name:SetPoint("CENTER", health, "CENTER", 0, TukuiDB.Scale(1))
+			Name:SetPoint("CENTER", self, "CENTER", 0, TukuiDB.Scale(1))
 			Name:SetFont(font1, 12, "OUTLINE")
 		else
 			Name:SetPoint("CENTER", panel, "CENTER", 0, TukuiDB.Scale(1))
@@ -1241,7 +1263,7 @@ if not IsAddOnLoaded("Gladius") then
 	end
 end
 
-if not IsAddOnLoaded("DXE") then
+if db.showboss then
 	for i = 1,MAX_BOSS_FRAMES do
 		local t_boss = _G["Boss"..i.."TargetFrame"]
 		t_boss:UnregisterAllEvents()
